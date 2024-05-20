@@ -44,7 +44,8 @@ int main(){
 	a = b;
 	b = copia;
 	cout<<"Valores finales a y b: "<<a<<" y "<<b<<endl;
-	cout<<"Ingreso de Datos por el Usuario"<<endl<<"Ejercicio 6"<<endl;
+	cout<<"Ingreso de Datos por el Usuario"<<endl;
+	cout<<"Ejercicio 6"<<endl;
 	
 	return 0;
 }
