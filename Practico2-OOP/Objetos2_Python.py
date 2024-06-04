@@ -414,6 +414,8 @@ class Texto():
             if caracter in vocales:
                 contar_vocales += 1
         return print(f"La cantidad de las vocales del texto es: '{contar_vocales}'")
+    
+    
 #Ejemplo de utilizacion para la clase de Texto
 # texto1 = Texto(input("Ingrese una frase: "))
 # print(texto1.invertir_texto())
@@ -455,6 +457,18 @@ class Carrito():
             if item.get_detalle() != nombre:
                 nueva_lista.append(item)
         self.__items = nueva_lista
+        
+    def costo_carrito(self):
+        suma_total = 0
+        for elemento in self.__items:
+            suma_total += elemento.precio_total()
+        if suma_total >= 2500:
+            envio_gratis = "Tiene envio gratis"
+        else:
+            envio_gratis = "No tiene envio gratis"
+        texto = f"El monto total de la compra es: ${suma_total}\nEnvio Gratis? - '{envio_gratis}'"
+        return texto
+    
 #Creacion de la clase de Producto para los items del carrito
 class Producto():
     def __init__(self, detalle, precio, cantidad):
@@ -481,11 +495,130 @@ class Producto():
         total = self.__cantidad * self.__precio
         return total 
 
-carrito1 = Carrito()
-producto1 = Producto("arroz", 1000, 2)
-producto2 = Producto("huevos", 200, 12)
-carrito1.agregar_item(producto1)
-carrito1.agregar_item(producto2)
-carrito1.get_carrito()
-carrito1.quitar_item("arroz")
-carrito1.get_carrito()
+#Ejemplo de utilizacion de las clases de Carrito y Producto
+# carrito1 = Carrito()
+# producto1 = Producto("arroz", 1000, 2)
+# producto2 = Producto("huevos", 200, 12)
+
+# carrito1.agregar_item(producto1)
+# carrito1.agregar_item(producto2)
+
+# carrito1.get_carrito()
+# print(carrito1.costo_carrito())
+
+# carrito1.quitar_item("arroz")
+
+# carrito1.get_carrito()
+# print(carrito1.costo_carrito())
+
+
+#Ejercicio 12
+print("EJERCICIO 12")
+
+#Creacion de la clase de Cliente
+class Cliente():
+    def __init__(self, nombre, dni):
+        self.__nombre = nombre
+        self.__dni = dni
+        self.__tarjetas = []
+    
+    #Metodos Getter
+    def get_nombre(self):
+        return self.__nombre
+    
+    def get_dni(self):
+        return self.__dni
+    
+    def get_tarjetas(self):
+        return self.__tarjetas
+
+    #Metodo para agregar una tarjeta de credito
+    def agregar_tarjeta(self, tarjeta):
+        if len(self.__tarjetas) < 4:
+            self.__tarjetas.append(tarjeta)
+        else:
+            print("Se ha superado el limite de tarjetas que se pueden agregar")
+    
+    #Metodo para quitar una tarjeta
+    def quitar_tarjeta(self, nombre_tarjeta):
+        lista_nueva = []
+        for tarjeta in self.__tarjetas:
+            if tarjeta.__nombre != nombre_tarjeta:
+                lista_nueva.append(tarjeta)
+            else:
+                print(f"Se ha eliminado a la tarjeta '{nombre_tarjeta}'.")
+        self.__tarjetas = lista_nueva
+    #Metodo para cobrar el pago de una sola tarjeta
+    def cobrar_sola(self, monto, nombre_tarjeta):
+        for tarjeta in self.__tarjetas:
+            if tarjeta.__nombre == nombre_tarjeta:
+                tarjeta.pagar(monto)
+        
+    #Metodo para cobrar de varias tarjetas un mismo monto dividido
+    def cobrar_varias(self, monto, tarjeta1, tarjeta2 = 0, tarjeta3 = 0, tarjeta4 = 0):
+        lista_cobrar = [tarjeta1, tarjeta2, tarjeta3, tarjeta4]
+        tarjetas_verificadas = []
+        for elemento in lista_cobrar:
+            for tarjeta in self.__tarjetas:
+                if elemento == tarjeta.get_nombre():
+                    tarjetas_verificadas.append(tarjeta)
+                else:
+                    print(f"La tarjeta '{elemento}' no se encuentra entre las tarjetas disponibles suyas.")
+        # monto_dividido = monto/len(tarjetas_verificadas)
+        # contador = 0
+        # for tarjeta in tarjetas_verificadas:
+        #     if tarjeta.suficiente_monto(monto_dividido):
+        #         contador += 1
+        # if contador == len(tarjetas_verificadas):
+        #     for tarjeta in tarjetas_verificadas:
+        #         tarjeta.pagar(monto_dividido)
+        # else:
+        #     print(f"No es posible pagar el monto por '${monto_dividido}' con la tarjeta '{tarjeta.get_nombre()}'")
+
+#Creacion de la clase de TarjetaCredito
+class TarjetaCredito():
+    def __init__(self, nombre, alias, dinero_disponible): #En este ejemplo tambien deberia estar otros datos como fecha de vencimiento, contraseña, cvu que se podrian agregar despues como funcionalidad.
+        self.__nombre = nombre
+        self.__alias = alias
+        self.__dinero_disponible = dinero_disponible
+
+    #Metodo getters
+    def get_nombre(self):
+        return self.__nombre
+    
+    def get_alias(self):
+        return self.__alias
+    
+    def get_dinero_disponble(self):
+        return self.__dinero_disponible
+    
+    #Metodo pagar y sacar el dinero de la cuenta
+    def pagar(self, monto_pagar):
+        if self.suficiente_monto(monto_pagar):
+            self.__dinero_disponible -= monto_pagar
+            print(f"Se ha realizado el pago por el monto de '${monto_pagar}' desde la tarjeta '{self.__nombre}'.")
+        else:
+            print(f"No es posible realizar el pago desde la tarjeta '{self.__nombre}'")
+    
+    #Metodo para cobrar una transaccion
+    def cobrar(self, monto_cobrar):
+        self.__dinero_disponible += monto_cobrar
+        print(f"Se ha realizado la transaccion, se han añadido {monto_cobrar} a la cuenta, el balance actual es '${self.__dinero_disponible}'")
+    
+    #Metodo para considerar si alcanza para pagar o no tiene suficiente monto
+    def suficiente_monto(self, monto):
+        if self.__dinero_disponible >= monto:
+            return True
+        else:
+            return False
+    
+    #Metodo para transferir de una tarjeta a otra
+    def transferir(self, tarjeta_destino, monto):
+        if (self.suficiente_monto(monto)):
+            self.pagar(monto)
+            tarjeta_destino.cobrar(monto)
+        else:
+            self.pagar(monto)
+
+#Ejemplo de utilziacion de las clases de TarjetaCredito y Cliente
+#Avance: falta arreglar el metodo de pagar con varias tarjetas y probar la utilizacion del codigo
