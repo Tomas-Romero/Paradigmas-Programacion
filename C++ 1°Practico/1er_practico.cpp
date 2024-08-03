@@ -218,11 +218,371 @@ int main(){
 	    cout << "La resta es: " << resta << endl;
     restaPositiva();
     
+    
     cout<<"Ejercicio 19"<<endl;
+    
+	void adivinaNumero() {
+	    srand(time(0));
+	    int secreto = rand() % 5 + 1;
+	    int intento;
+	
+	    cout << "Adivina el número secreto (entre 1 y 5): ";
+	    cin >> intento;
+	
+	    if (intento == secreto) {
+	        cout << "¡Adivinaste!" << endl;
+	    } else {
+	        cout << "¡Incorrecto! El número secreto era " << secreto << "." << endl;
+	        if (intento < secreto) {
+	            cout << "El número secreto era mayor." << endl;
+	        } else {
+	            cout << "El número secreto era menor." << endl;
+	        }
+	    }
+	}
+	adivinaNumero();
+	
+	
     cout<<"Ejercicio 20"<<endl;
+    
+    double nota_betty, nota_vilma;
+    cout << "Ingrese la nota de Vilma: ";
+    cin >> nota_vilma;
+
+    cout << "Ingrese la nota de Betty: ";
+    cin >> nota_betty;
+
+    if (nota_betty >= 2 * nota_vilma) {
+        cout << "Betty esta feliz." << endl;
+    } else {
+        cout << "Betty no esta feliz." << endl;
+    }
+    
     cout<<"Ejercicio 21"<<endl;
+    
+    int determinarMayor(int num1, int num2) {
+	    if (num1 > num2) {
+	        return num1;
+	    } else {
+	        return num2;
+	    }
+	}
+	int numero1;
+	int numero2;
+	cout << "Ingrese el numero 1 para ver si es mayor: " <<endl;
+	cin >> numero1;
+	
+	cout << "Ingrese el numero 2 para ver si es mayor al anterior ingresado: " << endl;
+	cin >> numero2;
+	
+    determinarMayor(numero1, numero2);
+    
+    
     cout<<"Ejercicio 22"<<endl;
+    
+    char determinarNota(int porcentaje) {
+	    if (porcentaje >= 90) {
+	        return 'A';
+	    } else if (porcentaje >= 80) {
+	        return 'B';
+	    } else if (porcentaje >= 70) {
+	        return 'C';
+	    } else if (porcentaje >= 60) {
+	        return 'D';
+	    } else {
+	        return 'F';
+	    }
+	}
+	
+	int porcentaje;
+    cout << "ingrese la nota en valor de porcentaje para ver la nota final: " << endl;
+    cin >> porcentaje;
+    cout << "La nota correspondiente es: " << determinarNota(porcentaje) << endl;
+    
+    
     cout<<"Ejercicio 23"<<endl;
     
 	return 0;
+}
+//23
+
+#include <iostream>
+
+using namespace std;
+
+bool esUnistico(int a, int b) {
+    return (a + b + a * b) == 111;
+}
+
+int main() {
+    
+    int pares[4][2] = {
+        {1, 55},
+        {55, 1},
+        {7, 13},
+        {7, 14}
+    };
+
+    for (int i = 0; i < 4; ++i) {
+        int a = pares[i][0];
+        int b = pares[i][1];
+        if (esUnistico(a, b)) {
+            cout << "El par (" << a << ", " << b << ") es Unístico." << endl;
+        } else {
+            cout << "El par (" << a << ", " << b << ") no es Unístico." << endl;
+        }
+    }
+
+    return 0;
+}
+
+//24
+
+#include <iostream>
+using namespace std;
+
+void mostrarSecuencia(int n) {
+    for (int i = 1; i <= n; ++i) {
+        cout << i << endl;
+    }
+}
+
+int main() {
+    int n;
+    cout << "Ingrese un número: ";
+    cin >> n;
+    mostrarSecuencia(n);
+    return 0;
+}
+
+//25
+
+#include <iostream>
+using namespace std;
+
+void sumaNumeros() {
+    int numero, suma = 0;
+    cout << "Ingrese números (0 para terminar): ";
+    cin >> numero;
+    while (numero != 0) {
+        suma += numero;
+        cin >> numero;
+    }
+    cout << "La suma es: " << suma << endl;
+}
+
+int main() {
+    sumaNumeros();
+    return 0;
+}
+
+//26
+
+#include <iostream>
+#include <string>
+using namespace std;
+
+void mostrarLetras(string frase) {
+    for (char letra : frase) {
+        if (letra != ' ') {
+            cout << letra << endl;
+        }
+    }
+}
+
+int main() {
+    string frase;
+    cout << "Ingrese una frase: ";
+    getline(cin, frase);
+    mostrarLetras(frase);
+    return 0;
+}
+
+
+//27
+
+#include <iostream>
+#include <string>
+using namespace std;
+
+void letrasPosicionesPares(string palabra) {
+    for (int i = 0; i < palabra.length(); i += 2) {
+        cout << palabra[i] << endl;
+    }
+}
+
+int main() {
+    string palabra;
+    cout << "Ingrese una palabra: ";
+    cin >> palabra;
+    letrasPosicionesPares(palabra);
+    return 0;
+}
+
+//28
+
+#include <iostream>
+#include <vector>
+using namespace std;
+
+int productoVector(const vector<int>& vec) {
+    int producto = 1;
+    for (int num : vec) {
+        producto *= num;
+    }
+    return producto;
+}
+
+int main() {
+    vector<int> numeros = {1, 2, 3, 4, 5, 6, 7, 8};
+    int producto = productoVector(numeros);
+    cout << "El producto de los números en el vector es: " << producto << endl;
+    return 0;
+}
+
+//29
+
+#include <iostream>
+#include <vector>
+using namespace std;
+
+double productoEscalar(const vector<double>& vec1, const vector<double>& vec2) {
+    double producto = 0;
+    for (int i = 0; i < vec1.size(); ++i) {
+        producto += vec1[i] * vec2[i];
+    }
+    return producto;
+}
+
+int main() {
+    vector<double> vec1 = {1.1, 2.2, 3.3, 4.4, 5.5, 6.6, 7.7, 8.8, 9.9, 10.1};
+    vector<double> vec2 = {10.1, 9.9, 8.8, 7.7, 6.6, 5.5, 4.4, 3.3, 2.2, 1.1};
+    double producto = productoEscalar(vec1, vec2);
+    cout << "El producto escalar de los vectores es: " << producto << endl;
+    return 0;
+}
+
+//30
+
+#include <iostream>
+#include <vector>
+#include <cstdlib> 
+#include <ctime> 
+
+using namespace std;
+
+int numeroAleatorio(int min, int max) {
+    return min + rand() % (max - min + 1);
+}
+
+
+    vector<int> valores(25);
+    
+    srand(time(0));
+
+    
+    for (int i = 0; i < 25; ++i) {
+        valores[i] = numeroAleatorio(1, 100);
+    }
+
+    
+    cout << "Primer valor: " << valores.front() << endl;
+    cout << "Valor del medio: " << valores[valores.size() / 2] << endl;
+    cout << "Último valor: " << valores.back() << endl;
+
+
+//31
+
+    int matriz[6][8];
+    int sumaDiagonal = 0;
+
+    
+    for (int i = 0; i < 6; ++i) {
+        for (int j = 0; j < 8; ++j) {
+            matriz[i][j] = numeroAleatorio(1, 100);
+            
+            if (i == j) {
+                sumaDiagonal += matriz[i][j];
+            }
+        }
+    }
+    return sumaDiagonal;
+}
+
+//32
+vector<int> ejercicio32() {
+    int matriz[8][12];
+    vector<int> sumaFilas(8, 0);
+
+    
+    for (int i = 0; i < 8; ++i) {
+        for (int j = 0; j < 12; ++j) {
+            matriz[i][j] = numeroAleatorio(1, 100);
+            sumaFilas[i] += matriz[i][j];
+        }
+    }
+    return sumaFilas;
+}
+
+//33
+
+void ejercicio33(string frase) {
+    
+    string palabra;
+    vector<string> palabras;
+    stringstream ss(frase);
+    while (ss >> palabra) {
+        palabras.push_back(palabra);
+    }
+
+    
+    if (palabras.size() < 3) {
+        cout << "La frase debe contener al menos 3 palabras." << endl;
+        return;
+    }
+
+    string palabraDelMedio = palabras[palabras.size() / 2];
+    int longitud = palabraDelMedio.length();
+
+    cout << "Palabra del medio: " << palabraDelMedio << endl;
+    cout << "Longitud: " << longitud << endl;
+}
+
+//34
+void ejercicio34(string nombreCompleto) {
+    size_t posicionEspacio = nombreCompleto.find(' ');
+    if (posicionEspacio == string::npos) {
+        cout << "Formato incorrecto. Debe ingresar nombre y apellido separados por un espacio." << endl;
+        return;
+    }
+
+    string nombre = nombreCompleto.substr(0, posicionEspacio);
+    string apellido = nombreCompleto.substr(posicionEspacio + 1);
+
+    cout << apellido << ", " << nombre << endl;
+}
+
+int main() {
+    ejercicio30();
+
+    int sumaDiagonal = ejercicio31();
+    cout << "Suma de los elementos de la diagonal: " << sumaDiagonal << endl;
+
+    vector<int> sumaFilas = ejercicio32();
+    cout << "Suma de los valores de cada fila:" << endl;
+    for (int i = 0; i < sumaFilas.size(); ++i) {
+        cout << "Fila " << i + 1 << ": " << sumaFilas[i] << endl;
+    }
+
+    string frase;
+    cout << "Ingrese una frase: ";
+    getline(cin, frase);
+    ejercicio33(frase);
+
+    string nombreCompleto;
+    cout << "Ingrese nombre y apellido: ";
+    getline(cin, nombreCompleto);
+    ejercicio34(nombreCompleto);
+
+    return 0;
 }
