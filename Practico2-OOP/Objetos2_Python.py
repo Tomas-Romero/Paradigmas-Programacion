@@ -1,7 +1,7 @@
 import random
 
-#Ejercicio 1
-print("EJERCICIO 1")
+#Ejercicio 7
+print("EJERCICIO 7")
 
 class Estudiante():
     def __init__(self, legajo, nombre, carrera, institucion, mail, dni):
@@ -536,44 +536,48 @@ class Cliente():
     def agregar_tarjeta(self, tarjeta):
         if len(self.__tarjetas) < 4:
             self.__tarjetas.append(tarjeta)
+            print(f"Tarjeta '{tarjeta.get_nombre()}' añadida.")
         else:
-            print("Se ha superado el limite de tarjetas que se pueden agregar")
+            print("Se ha superado el límite de tarjetas que se pueden agregar.")
     
     #Metodo para quitar una tarjeta
-    def quitar_tarjeta(self, nombre_tarjeta):
-        lista_nueva = []
+    def quitar_tarjeta(self, alias_tarjeta):
         for tarjeta in self.__tarjetas:
-            if tarjeta.__nombre != nombre_tarjeta:
-                lista_nueva.append(tarjeta)
-            else:
-                print(f"Se ha eliminado a la tarjeta '{nombre_tarjeta}'.")
-        self.__tarjetas = lista_nueva
+            if tarjeta.get_alias() == alias_tarjeta:
+                self.__tarjetas.remove(tarjeta)
+                print(f"Se ha eliminado la tarjeta '{alias_tarjeta}'.")
+                return
+        print(f"No se encontró una tarjeta con el alias '{alias_tarjeta}'.")
+        
     #Metodo para cobrar el pago de una sola tarjeta
-    def cobrar_sola(self, monto, nombre_tarjeta):
+    def cobrar_sola(self, monto, alias_tarjeta):
         for tarjeta in self.__tarjetas:
-            if tarjeta.__nombre == nombre_tarjeta:
+            if tarjeta.get_alias() == alias_tarjeta:
                 tarjeta.pagar(monto)
+                return
+        print(f"No se encontró una tarjeta con el alias '{alias_tarjeta}'.")
         
     #Metodo para cobrar de varias tarjetas un mismo monto dividido
-    def cobrar_varias(self, monto, tarjeta1, tarjeta2 = 0, tarjeta3 = 0, tarjeta4 = 0):
-        lista_cobrar = [tarjeta1, tarjeta2, tarjeta3, tarjeta4]
-        tarjetas_verificadas = []
-        for elemento in lista_cobrar:
-            for tarjeta in self.__tarjetas:
-                if elemento == tarjeta.get_nombre():
-                    tarjetas_verificadas.append(tarjeta)
-                else:
-                    print(f"La tarjeta '{elemento}' no se encuentra entre las tarjetas disponibles suyas.")
-        # monto_dividido = monto/len(tarjetas_verificadas)
-        # contador = 0
-        # for tarjeta in tarjetas_verificadas:
-        #     if tarjeta.suficiente_monto(monto_dividido):
-        #         contador += 1
-        # if contador == len(tarjetas_verificadas):
-        #     for tarjeta in tarjetas_verificadas:
-        #         tarjeta.pagar(monto_dividido)
-        # else:
-        #     print(f"No es posible pagar el monto por '${monto_dividido}' con la tarjeta '{tarjeta.get_nombre()}'")
+    def cobrar_varias(self, monto, *aliases):
+        tarjetas_verificadas = [tarjeta for tarjeta in self.__tarjetas if tarjeta.get_alias() in aliases]
+        if len(tarjetas_verificadas) != len(aliases):
+            print("Una o más tarjetas no fueron encontradas.")
+            return
+
+        monto_dividido = monto / len(tarjetas_verificadas)
+        if all(tarjeta.suficiente_monto(monto_dividido) for tarjeta in tarjetas_verificadas):
+            for tarjeta in tarjetas_verificadas:
+                tarjeta.pagar(monto_dividido)
+            print("Se ha pagado todo el monto entre las distintas tarjetas seleccionadas.")
+        else:
+            print("No es posible pagar el monto con las tarjetas ingresadas.")
+    #Metodo para mostrar las tarjetas
+    def mostrar_tarjetas(self):
+        if not self.__tarjetas:
+            print("No tiene tarjetas registradas.")
+        for tarjeta in self.__tarjetas:
+            print(f"Nombre: {tarjeta.get_nombre()}, Alias: {tarjeta.get_alias()}, Dinero disponible: {tarjeta.get_dinero_disponible()}")
+    
 
 #Creacion de la clase de TarjetaCredito
 class TarjetaCredito():
@@ -617,8 +621,205 @@ class TarjetaCredito():
         if (self.suficiente_monto(monto)):
             self.pagar(monto)
             tarjeta_destino.cobrar(monto)
+            print(f"Transferencia de ${monto} realizada desde '{self.get_nombre()}' a '{tarjeta_destino.get_nombre()}'.")
         else:
-            self.pagar(monto)
+            print(f"No hay suficiente dinero disponible para transferir ${monto}.")
+    
 
-#Ejemplo de utilziacion de las clases de TarjetaCredito y Cliente
-#Avance: falta arreglar el metodo de pagar con varias tarjetas y probar la utilizacion del codigo
+#Ejemplo de utilizacion de las clases de TarjetaCredito y Cliente
+def menu_tarjetas():
+    nombre_cliente = input("Ingrese su nombre: ")
+    dni_cliente = input("Ingrese su DNI: ")
+    cliente = Cliente(nombre_cliente, dni_cliente)
+
+    while True:
+        print("\nMenú de opciones:")
+        print("1. Agregar una tarjeta de crédito nueva")
+        print("2. Quitar una tarjeta de crédito de su cuenta actual")
+        print("3. Ver sus tarjetas guardadas y la información")
+        print("4. Pagar con una sola tarjeta")
+        print("5. Pagar con varias tarjetas")
+        print("6. Salir del sistema")
+
+        opcion_menu = int(input("Seleccione una opción: "))
+
+        if opcion_menu == 1:
+            nombre_tarjeta = input("Ingrese el nombre de la tarjeta: ")
+            alias_tarjeta = input("Ingrese el alias de la tarjeta: ")
+            dinero_disponible = float(input("Ingrese el dinero disponible en la tarjeta: "))
+            nueva_tarjeta = TarjetaCredito(nombre_tarjeta, alias_tarjeta, dinero_disponible)
+            cliente.agregar_tarjeta(nueva_tarjeta)
+
+        elif opcion_menu == 2:
+            alias_tarjeta = input("Ingrese el alias de la tarjeta que desea quitar: ")
+            cliente.quitar_tarjeta(alias_tarjeta)
+
+        elif opcion_menu == 3:
+            cliente.mostrar_tarjetas()
+
+        elif opcion_menu == 4:
+            alias_tarjeta = input("Ingrese el alias de la tarjeta con la que desea pagar: ")
+            monto = float(input("Ingrese el monto a pagar: "))
+            cliente.cobrar_sola(monto, alias_tarjeta)
+
+        elif opcion_menu == 5:
+            monto = float(input("Ingrese el monto total a pagar: "))
+            print("Ingrese los alias de las tarjetas (máximo 4, separadas por comas):")
+            aliases = input().split(',')
+            aliases = [alias.strip() for alias in aliases]
+            cliente.cobrar_varias(monto, *aliases)
+
+        elif opcion_menu == 6:
+            print("Gracias por usar nuestro sistema. ¡Hasta luego!")
+            break
+
+        else:
+            print("Opción inválida")
+#Utilizacion del menu para el ejemplo
+# menu_tarjetas()
+
+#Ejercicio 13
+print("EJERCICIO 13")
+
+#Creacion de la clase de mensaje cripto
+class MensajeCripto:
+    def __init__(self, desplazamiento):
+        self.desplazamiento = desplazamiento
+        self.alfabeto = 'ABCDEFGHIJKLMNOPQRSTUVWXYZÑabcdefghijklmnopqrstuvwxyzñ'
+        self.longitud_alfabeto = len(self.alfabeto)
+    
+    def encriptar(self, mensaje):
+        mensaje_encriptado = ''
+        for caracter in mensaje:
+            if caracter in self.alfabeto:
+                indice_original = self.alfabeto.index(caracter)
+                indice_nuevo = (indice_original + self.desplazamiento) % self.longitud_alfabeto
+                mensaje_encriptado += self.alfabeto[indice_nuevo]
+            else:
+                mensaje_encriptado += caracter
+        return mensaje_encriptado
+    
+    def desencriptar(self, mensaje):
+        mensaje_desencriptado = ''
+        for caracter in mensaje:
+            if caracter in self.alfabeto:
+                indice_original = self.alfabeto.index(caracter)
+                indice_nuevo = (indice_original - self.desplazamiento) % self.longitud_alfabeto
+                mensaje_desencriptado += self.alfabeto[indice_nuevo]
+            else:
+                mensaje_desencriptado += caracter
+        return mensaje_desencriptado
+
+#Ejemplo de utilizacion del ejercicio
+
+# mensaje_cripto = MensajeCripto(desplazamiento=3)
+
+# mensaje_original = "Hola como estas? mi nombre es Tomas Romero."
+# mensaje_encriptado = mensaje_cripto.encriptar(mensaje_original)
+# print("Mensaje encriptado:", mensaje_encriptado)
+
+# # Desencriptar el mensaje
+# mensaje_desencriptado = mensaje_cripto.desencriptar(mensaje_encriptado)
+# print("Mensaje desencriptado:", mensaje_desencriptado)
+
+#Ejercicio 14
+print("EJERCICIO 14")
+
+class EtiquetaHTML:
+    def __init__(self, nombre, contenido='', atributos=''):
+        self.nombre = nombre
+        self.contenido = contenido
+        self.atributos = atributos
+    
+    def __str__(self):
+        apertura = f'<{self.nombre} {self.atributos}>' if self.atributos else f'<{self.nombre}>'
+        cierre = f'</{self.nombre}>'
+        return f'{apertura}{self.contenido}{cierre}'
+
+#Ejemplo de utilizacion de etiquetas html
+# parrafo = EtiquetaHTML('p', 'es un párrafo.', 'class="texto"')
+# print(parrafo)
+
+# enlace = EtiquetaHTML('a', 'Haz clic aquí', 'href="https://ejemplo.com"')
+# print(enlace)
+
+# lista = EtiquetaHTML('ul',
+#     f'{EtiquetaHTML("li", "Elemento 1")} {EtiquetaHTML("li", "Elemento 2")} {EtiquetaHTML("li", "Elemento 3")}'
+# )
+# print(lista)
+
+
+#Ejercicio 15
+print("EJERCICIO 15")
+
+#Creacion de la clase para binario
+class Binario:
+    def __init__(self, valor):
+        if type(valor) == int:
+            # Convertir de decimal a binario y almacenar como cadena
+            self.valor = self._decimal_a_binario(valor)
+        elif type(valor) == str:
+            # Verificar que la cadena contenga solo '0' y '1'
+            for caracter in valor:
+                if caracter != '0' and caracter != '1':
+                    print("Error: La cadena debe contener solo '0' y '1'.")
+                    self.valor = '0'
+                    return
+            self.valor = valor
+        else:
+            print("Error: El valor debe ser un entero o una cadena de números binarios.")
+            self.valor = '0'
+    
+    def _decimal_a_binario(self, decimal):
+        if decimal == 0:
+            return '0'
+        binario = ''
+        while decimal > 0:
+            binario = str(decimal % 2) + binario
+            decimal = decimal // 2
+        return binario
+
+    def a_decimal(self):
+        decimal = 0
+        potencia = 1
+        for bit in reversed(self.valor):
+            if bit == '1':
+                decimal += potencia
+            potencia *= 2
+        return decimal
+
+    def sumar(self, otro):
+        if type(otro) == Binario:
+            suma_decimal = self.a_decimal() + otro.a_decimal()
+            return Binario(suma_decimal)
+        else:
+            print("Error: El argumento debe ser una instancia de Binario.")
+            return Binario(0)
+
+    def restar(self, otro):
+        if type(otro) == Binario:
+            resta_decimal = self.a_decimal() - otro.a_decimal()
+            if resta_decimal < 0:
+                print("Error: La resta da un resultado negativo.")
+                return Binario(0)
+            return Binario(resta_decimal)
+        else:
+            print("Error: El argumento debe ser una instancia de Binario.")
+            return Binario(0)
+
+    def __str__(self):
+        return self.valor
+
+# Ejemplo de uso
+# bin1 = Binario("1010")  # Binario 1010 (decimal 10)
+# bin2 = Binario(5)       # Decimal 5 convertido a binario (101)
+# print(f"Binario 1: {bin1}") 
+# print(f"Binario 2: {bin2}") 
+# # Convertir a decimal
+# print(f"Binario 1 a decimal: {bin1.a_decimal()}") 
+# # Sumar
+# resultado_suma = bin1.sumar(bin2)
+# print(f"Suma: {resultado_suma}")
+# # Restar
+# resultado_resta = bin1.restar(bin2)
+# print(f"Resta: {resultado_resta}")
