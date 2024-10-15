@@ -1,0 +1,5 @@
+Ejercicio 3)-
+Aparece un error, este error es debido a que hay multiples declaraciones para valores de "n". En el paradigma funcional no se pueden ir modificando las "variables" ya que no existen variables, sino que se le asignan valores.
+Ejercicio 4)-
+En el paradigma funcional, el concepto de estado no se maneja de la misma manera que en otros paradigmas, como el imperativo u orientado a objetos. En un lenguaje funcional puro como Haskell, no hay "estado" en el sentido tradicional porque no existen variables que puedan cambiar su valor una vez asignado. Esto se debe a que las funciones son inmutables y sin efectos secundarios. Todo lo que una función recibe como entrada es lo que determina su salida, sin depender de variables o estados externos que puedan modificarse.
+En un lenguaje funcional puro como Haskell, no hay estado mutable en el sentido clásico. Sin embargo, algunos problemas requieren manejar cambios a lo largo del tiempo, como la interacción con el mundo exterior (entrada/salida, trabajar con bases de datos, etc.).
